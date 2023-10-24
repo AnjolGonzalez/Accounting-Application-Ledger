@@ -7,3 +7,6 @@ Made entries save onto transactions.csv file
 fixing output for number 2 reports screen
 ![image](https://github.com/AnjolGonzalez/Accounting-Application-Ledger/assets/146877064/d8bdbc85-5d85-4431-8aa4-97f5543c7fbb)
 
+fixed dates
+
+![image](https://github.com/AnjolGonzalez/Accounting-Application-Ledger/assets/146877064/0ad8ed13-37c4-4a38-82ad-03c0826a1ccd)
