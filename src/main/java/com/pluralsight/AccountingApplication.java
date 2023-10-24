@@ -1,11 +1,12 @@
 package com.pluralsight;
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Scanner;
 import static com.pluralsight.LedgerScreen.*;
 
 public class AccountingApplication {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws IOException {
         Scanner scan = new Scanner(System.in);
 
         while(true) {

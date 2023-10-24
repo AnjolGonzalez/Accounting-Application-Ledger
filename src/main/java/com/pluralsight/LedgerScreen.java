@@ -12,7 +12,8 @@ public class LedgerScreen {
 
     public static ArrayList<Ledger> ledgerArrayList = new ArrayList<>();
 
-    public static void ledgerScreen (Scanner scan){
+    public static void ledgerScreen (Scanner scan) throws IOException {
+        readFile();
         while (true){
             System.out.println("Ledger options: ");
             System.out.println("A) All");
@@ -77,7 +78,7 @@ public class LedgerScreen {
             System.out.println("Report Screen");
             System.out.println("1) Month To Date");
             System.out.println("2) Previous Month");
-            System.out.println("3 Year To Date");
+            System.out.println("3) Year To Date");
             System.out.println("4) Previous Year");
             System.out.println("5) Search by Vendor");
             System.out.println("0) Back");
@@ -87,15 +88,17 @@ public class LedgerScreen {
             String choice = scan.nextLine();
 
             if (choice.equalsIgnoreCase("1")) {
+                /*All these methods are doing is setting up the calculations on reading the data in file and outputting
+                the correct way*/
 
-                LocalDate sDate = LocalDate.now().withDayOfMonth(1);
-                LocalDate eDate = LocalDate.now();
+                LocalDate sDate = LocalDate.now().minusMonths(1);
+                LocalDate eDate = LocalDate.now().plusMonths(1);
                 displayReport (ledgerArrayList, sDate, eDate);
 
             }else if (choice.equalsIgnoreCase("2")) {
 
                 LocalDate sDate = LocalDate.now().minusMonths(1).withDayOfMonth(1);
-                LocalDate eDate = LocalDate.now().minusMonths(1).withDayOfMonth(LocalDate.now().minusMonths(1).lengthOfMonth());
+                LocalDate eDate = LocalDate.now().withDayOfMonth(1).minusDays(1);
                 displayReport (ledgerArrayList,sDate, eDate);
 
             } else if (choice.equalsIgnoreCase("3")) {
@@ -111,20 +114,45 @@ public class LedgerScreen {
                 displayReport(ledgerArrayList, sDate, eDate);
 
             } else if (choice.equalsIgnoreCase("5")) {
-                //vendor searched
+
                 System.out.println("Enter Vendor name: ");
                 String vendor = scan.nextLine();
                 displayFilteredLedgerByVendor(ledgerArrayList, vendor);
-            } else if (choice.equalsIgnoreCase("0")) {
-                //goes back to home screen
-                break;
-            } else if (choice.equalsIgnoreCase("H")) {
 
+            } else if (choice.equalsIgnoreCase("0")) {
+                //goes back one
+                break;
+
+            } else if (choice.equalsIgnoreCase("H")) {
+                //goes to go back home
                 return;
 
             }else {
                 System.out.println("ERROR! ERROR! Invalid input\n" +
                         "Please try again: ");
+            }
+        }
+    }
+    //report
+    private static void displayReport (ArrayList<Ledger> ledger, LocalDate sDate, LocalDate eDate) {
+
+        if (ledger.isEmpty()) {
+
+            System.out.println("No entries found in ledger");
+
+        }else {
+
+            System.out.println("Entry reports");
+
+            for (Ledger key : ledgerArrayList) {
+
+                LocalDate date = key.getDate();
+
+                if (date.isBefore(eDate) && date.isAfter(sDate)) {
+                    //This checks the date if it's before the specified date
+                    //The second one checks the date if it's after the specified one
+                    System.out.printf("Date: %s | Time: %s | Description: %s | Vendor: %s | Amount $%.2f\n",
+                            key.getDate(), key.getTime(), key.getDescription(), key.getVendor(), key.getAmount());                }
             }
         }
     }
@@ -167,34 +195,17 @@ public class LedgerScreen {
             }
         }
     }
-    private static void displayReport (ArrayList<Ledger> ledger, LocalDate sDate, LocalDate eDate) {
-        if (ledger.isEmpty()) {
-            System.out.println("No entries found in ledger");
-        }else {
-            System.out.println("Entry reports");
-            for (Ledger key : ledgerArrayList) {
-                LocalDate date = LocalDate.now();
 
-                if (!date.isBefore(sDate) && !date.isAfter(eDate)) {
-                    System.out.printf("Date: %s | Time: %s | Description: %s | Vendor: %s | Amount $%.2f\n",
-                            key.getDate(), key.getTime(), key.getDescription(), key.getVendor(), key.getAmount());                }
-            }
-        }
-    }
     public static void saveTransaction(String description, double amount, String vendor){
         try {
-            String input;
-            FileReader fileReader = new FileReader(transactionFile);
-            BufferedReader bufferedReader = new BufferedReader(fileReader);
-            while ((input = bufferedReader.readLine())!= null) {
-
-            }
-            FileWriter fileWriter = new FileWriter(transactionFile, true);
-            BufferedWriter name = new BufferedWriter(fileWriter);
             LocalDate date = LocalDate.now();
             LocalTime timeCSV = LocalTime.now();
             DateTimeFormatter dTime = DateTimeFormatter.ofPattern("HH:mm:ss");
             timeCSV = LocalTime.parse(dTime.format(timeCSV));
+
+            FileWriter fileWriter = new FileWriter(transactionFile, true);
+            BufferedWriter name = new BufferedWriter(fileWriter);
+
             ledgerArrayList.add(new Ledger(date, timeCSV, description, vendor, amount));
 
                     String transactionEntries = date +"|" + timeCSV + "|" + description + "|" + vendor + "|" + amount;
@@ -207,6 +218,37 @@ public class LedgerScreen {
         } catch (IOException error) {
             System.out.println("An error has occurred, file not saved");
             error.printStackTrace();
+        }
+    }
+    public static void readFile() throws IOException {
+        String input;
+        LocalDate date = LocalDate.now();
+        LocalTime timeCSV = LocalTime.now();
+        String description;
+        String vendor;
+        double amount;
+
+        DateTimeFormatter dTime = DateTimeFormatter.ofPattern("HH:mm:ss");
+        timeCSV = LocalTime.parse(dTime.format(timeCSV));
+        FileReader fileReader = new FileReader(transactionFile);
+        BufferedReader bufferedReader = new BufferedReader(fileReader);
+
+        while ((input = bufferedReader.readLine())!= null) {
+
+            String[] transactionLists = input.split("\\|");
+
+            if (!transactionLists[0].equals("date")) {
+
+                date = LocalDate.parse(transactionLists[0]);
+                timeCSV = LocalTime.parse(transactionLists[1]);
+                description = transactionLists[2];
+                vendor = transactionLists[3];
+                amount = Double.parseDouble(transactionLists[4]);
+
+                ledgerArrayList.add(new Ledger(date, timeCSV, description, vendor, amount));
+
+            }
+
         }
     }
 
