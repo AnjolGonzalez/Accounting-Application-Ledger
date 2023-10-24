@@ -3,16 +3,16 @@ import java.io.*;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class LedgerScreen {
     public static String transactionFile = "src/main/resources/transactions.csv";
     private static DateTimeFormatter time =DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-    public static int count = 0;
-    public static HashMap<String, Double>ledger;
 
-    public static void ledgerScreen (Scanner scan, HashMap<String, Double> ledger){
+    public static ArrayList<Ledger> ledgerArrayList = new ArrayList<>();
+
+    public static void ledgerScreen (Scanner scan){
         while (true){
             System.out.println("Ledger options: ");
             System.out.println("A) All");
@@ -27,19 +27,19 @@ public class LedgerScreen {
 
             if (choice.equalsIgnoreCase("A")) {
 
-                displayLedger(ledger);
+                displayLedger();
 
             } else if (choice.equalsIgnoreCase("D")) {
 
-                displayFilteredLedger(ledger, true);
+                displayFilteredLedger(true);
 
             } else if (choice.equalsIgnoreCase("P")) {
 
-                displayFilteredLedger(ledger, false);
+                displayFilteredLedger(false);
 
             } else if (choice.equalsIgnoreCase("R")) {
 
-                reportScreen(scan, ledger);
+                reportScreen(scan);
 
             } else if (choice.equalsIgnoreCase("O")) {
 
@@ -57,21 +57,22 @@ public class LedgerScreen {
         }
     }
 
-    private static void displayLedger(HashMap<String, Double> ledger) {
-        if (ledger.isEmpty()) {
+    private static void displayLedger() {
+        if (ledgerArrayList.isEmpty()) {
 
             System.out.println("No entries found.");
 
         }else {
             System.out.println("Entries");
-            for (String key : ledger.keySet()) {
-                System.out.println(key + "-" + ledger.get(key));
+            for (Ledger key : ledgerArrayList) {
+                System.out.printf("Date: %s | Time: %s | Description: %s | Vendor: %s | Amount $%.2f\n",
+                        key.getDate(), key.getTime(), key.getDescription(), key.getVendor(), key.getAmount());
 
             }
         }
     }
 
-    private static void reportScreen(Scanner scan,HashMap<String, Double> ledger) {
+    private static void reportScreen(Scanner scan) {
         while (true) {
             System.out.println("Report Screen");
             System.out.println("1) Month To Date");
@@ -89,31 +90,31 @@ public class LedgerScreen {
 
                 LocalDate sDate = LocalDate.now().withDayOfMonth(1);
                 LocalDate eDate = LocalDate.now();
-                displayReport (ledger, sDate, eDate);
+                displayReport (ledgerArrayList, sDate, eDate);
 
             }else if (choice.equalsIgnoreCase("2")) {
 
                 LocalDate sDate = LocalDate.now().minusMonths(1).withDayOfMonth(1);
                 LocalDate eDate = LocalDate.now().minusMonths(1).withDayOfMonth(LocalDate.now().minusMonths(1).lengthOfMonth());
-                displayReport (ledger,sDate, eDate);
+                displayReport (ledgerArrayList,sDate, eDate);
 
             } else if (choice.equalsIgnoreCase("3")) {
 
                 LocalDate sDate = LocalDate.now().withDayOfYear(1);
                 LocalDate eDate = LocalDate.now();
-                displayReport(ledger, sDate, eDate);
+                displayReport(ledgerArrayList, sDate, eDate);
 
             } else if (choice.equalsIgnoreCase("4")) {
 
                 LocalDate sDate =LocalDate.now().minusYears(1).withDayOfYear(1);
                 LocalDate eDate =LocalDate.now().minusYears(1).withDayOfYear(LocalDate.now().minusYears(1).lengthOfYear());
-                displayReport(ledger, sDate, eDate);
+                displayReport(ledgerArrayList, sDate, eDate);
 
             } else if (choice.equalsIgnoreCase("5")) {
                 //vendor searched
                 System.out.println("Enter Vendor name: ");
                 String vendor = scan.nextLine();
-                displayFilteredLedgerByVendor(ledger, vendor);
+                displayFilteredLedgerByVendor(ledgerArrayList, vendor);
             } else if (choice.equalsIgnoreCase("0")) {
                 //goes back to home screen
                 break;
@@ -127,23 +128,10 @@ public class LedgerScreen {
             }
         }
     }
-    private static void displayLedger (Scanner scan, HashMap<String, Double> ledger) {
 
-        if (ledger.isEmpty()) {
+    private static void displayFilteredLedger (boolean displayDeposits) {
 
-            System.out.println("No entries found.");
-
-        }else {
-            System.out.println("Entries");
-            for (String key : ledger.keySet()) {
-                System.out.println(key + "-" + ledger.get(key));
-
-            }
-        }
-    }
-    private static void displayFilteredLedger (HashMap<String, Double> ledger, boolean displayDeposits) {
-
-        if (ledger.isEmpty()) {
+        if (ledgerArrayList.isEmpty()) {
 
             System.out.println("No entries found");
 
@@ -151,17 +139,17 @@ public class LedgerScreen {
 
             System.out.println("Filtered Entries");
 
-            for (String key : ledger.keySet()) {
+            for (Ledger key : ledgerArrayList) {
 
-                double amount = ledger.get(key);
+                double amount = key.getAmount();
                 if ((displayDeposits && amount > 0) || (!displayDeposits && amount < 0)) {
-                    System.out.println(key + "|" + amount);
-
+                    System.out.printf("Date: %s | Time: %s | Description: %s | Vendor: %s | Amount $%.2f\n",
+                            key.getDate(), key.getTime(), key.getDescription(), key.getVendor(), key.getAmount());
                 }
             }
         }
     }
-    private static void displayFilteredLedgerByVendor (HashMap<String, Double>ledger, String vendor) {
+    private static void displayFilteredLedgerByVendor (ArrayList<Ledger> ledger, String vendor) {
 
         if (ledger.isEmpty()) {
             System.out.println("No entries found");
@@ -170,66 +158,56 @@ public class LedgerScreen {
 
             System.out.println("Filtered Entries for Vendor " + vendor);
 
-            for (String key : ledger.keySet()) {
+            for (Ledger key : ledgerArrayList) {
 
-                if (key.contains(vendor)) {
-                    System.out.println(key + "|" + ledger.get(key));
+                if (key.getVendor().contains(vendor)) {
+                    System.out.printf("Date: %s | Time: %s | Description: %s | Vendor: %s | Amount $%.2f\n",
+                            key.getDate(), key.getTime(), key.getDescription(), key.getVendor(), key.getAmount());
                 }
             }
         }
     }
-    private static void displayReport (HashMap<String, Double>ledger, LocalDate sDate, LocalDate eDate) {
+    private static void displayReport (ArrayList<Ledger> ledger, LocalDate sDate, LocalDate eDate) {
         if (ledger.isEmpty()) {
             System.out.println("No entries found in ledger");
         }else {
             System.out.println("Entry reports");
-            for (String key : ledger.keySet()) {
-                LocalDate date = LocalDate.parse(getDateFromKey(key), time);
+            for (Ledger key : ledgerArrayList) {
+                LocalDate date = LocalDate.now();
 
                 if (!date.isBefore(sDate) && !date.isAfter(eDate)) {
-                    System.out.println(key + "|"  + ledger.get(key));
-                }
+                    System.out.printf("Date: %s | Time: %s | Description: %s | Vendor: %s | Amount $%.2f\n",
+                            key.getDate(), key.getTime(), key.getDescription(), key.getVendor(), key.getAmount());                }
             }
         }
     }
-    public static void saveTransaction(String description, double amount){
+    public static void saveTransaction(String description, double amount, String vendor){
         try {
             String input;
-            FileReader fileReader = new FileReader("src/main/resources/transactions.csv");
+            FileReader fileReader = new FileReader(transactionFile);
             BufferedReader bufferedReader = new BufferedReader(fileReader);
-            FileWriter fileWriter = new FileWriter("src/main/resources/transactions.csv", true);
+            while ((input = bufferedReader.readLine())!= null) {
+
+            }
+            FileWriter fileWriter = new FileWriter(transactionFile, true);
             BufferedWriter name = new BufferedWriter(fileWriter);
-            String formattedDate;
-            String timeCSV;
-            String vendor;
-            
-            while ((input = bufferedReader.readLine()) != null) {
-                String[] transactionFile = input.split("\\|");
-                if (!transactionFile[0].equals("date")) {
-                    formattedDate = String.valueOf(LocalDate.parse(transactionFile[0]));
-                    timeCSV = String.valueOf(LocalTime.parse(transactionFile[1]));
-                    description = transactionFile[2];
-                    vendor = transactionFile[3];
-                    amount = Double.parseDouble(transactionFile[4]);
-                    ledger.put(count, new LedgerScreen(formattedDate));
-                    count++;
-                    
-                    String transactionEntries = formattedDate +"|" + description + "|" + amount;
+            LocalDate date = LocalDate.now();
+            LocalTime timeCSV = LocalTime.now();
+            DateTimeFormatter dTime = DateTimeFormatter.ofPattern("HH:mm:ss");
+            timeCSV = LocalTime.parse(dTime.format(timeCSV));
+            ledgerArrayList.add(new Ledger(date, timeCSV, description, vendor, amount));
+
+                    String transactionEntries = date +"|" + timeCSV + "|" + description + "|" + vendor + "|" + amount;
 
                     name.write(transactionEntries);
                     name.newLine();
                     name.close();
-                }
-            }
-            
+
 
         } catch (IOException error) {
             System.out.println("An error has occurred, file not saved");
             error.printStackTrace();
         }
-    }
-    private static String getDateFromKey(String userPrompt) {
-        return userPrompt.split("|")[0];
     }
 
 }

@@ -6,7 +6,6 @@ import static com.pluralsight.LedgerScreen.*;
 public class AccountingApplication {
 
     public static void main(String[] args) {
-        HashMap<String, Double> ledger = new HashMap<>();
         Scanner scan = new Scanner(System.in);
 
         while(true) {
@@ -24,22 +23,30 @@ public class AccountingApplication {
                 double amount = scan.nextDouble();
                 scan.nextLine();
 
-                saveTransaction("Deposit", amount);
+                System.out.println("What is the Vendor name?: ");
+                String vendor = scan.nextLine();
+
+                saveTransaction("Deposit", amount, vendor);
 
                 System.out.println("Deposit Successful!");
+
             } else if (choice.equalsIgnoreCase("P")) {
 
                 System.out.print("What is the debit amount?: ");
                 double amount = scan.nextDouble();
-
                 scan.nextLine();
+                amount *= -1;
+                System.out.println("What is the Vendor name?: ");
+                String vendor = scan.nextLine();
 
-                saveTransaction("Payment", -amount);
+                saveTransaction("Payment", amount, vendor);
+
 
                 System.out.print("Payment Successful!");
+
             } else if (choice.equalsIgnoreCase("L")) {
 
-                ledgerScreen(scan, ledger);
+                ledgerScreen(scan);
 
             }else if (choice.equalsIgnoreCase("X")) {
                 break;
