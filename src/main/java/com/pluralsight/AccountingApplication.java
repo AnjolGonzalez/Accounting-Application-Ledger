@@ -1,7 +1,6 @@
 package com.pluralsight;
 import java.util.HashMap;
 import java.util.Scanner;
-
 import static com.pluralsight.LedgerScreen.*;
 
 public class AccountingApplication {

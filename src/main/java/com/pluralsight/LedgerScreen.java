@@ -1,15 +1,16 @@
 package com.pluralsight;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.time.LocalDate;
+import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.HashMap;
 import java.util.Scanner;
 
 public class LedgerScreen {
-    public static final String transactionFile = "src/main/resources/transactions.csv";
-    private static final DateTimeFormatter time =DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static String transactionFile = "src/main/resources/transactions.csv";
+    private static DateTimeFormatter time =DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
+    public static int count = 0;
+    public static HashMap<String, Double>ledger;
 
     public static void ledgerScreen (Scanner scan, HashMap<String, Double> ledger){
         while (true){
@@ -193,15 +194,34 @@ public class LedgerScreen {
     }
     public static void saveTransaction(String description, double amount){
         try {
-            BufferedWriter name = new BufferedWriter(new FileWriter(transactionFile, true));
+            String input;
+            FileReader fileReader = new FileReader("src/main/resources/transactions.csv");
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
+            FileWriter fileWriter = new FileWriter("src/main/resources/transactions.csv", true);
+            BufferedWriter name = new BufferedWriter(fileWriter);
+            String formattedDate;
+            String timeCSV;
+            String vendor;
+            
+            while ((input = bufferedReader.readLine()) != null) {
+                String[] transactionFile = input.split("\\|");
+                if (!transactionFile[0].equals("date")) {
+                    formattedDate = String.valueOf(LocalDate.parse(transactionFile[0]));
+                    timeCSV = String.valueOf(LocalTime.parse(transactionFile[1]));
+                    description = transactionFile[2];
+                    vendor = transactionFile[3];
+                    amount = Double.parseDouble(transactionFile[4]);
+                    ledger.put(count, new LedgerScreen(formattedDate));
+                    count++;
+                    
+                    String transactionEntries = formattedDate +"|" + description + "|" + amount;
 
-            String formattedDate = LocalDate.now().toString();
-            String transactionEntries = formattedDate + "|" + description + "|" + amount;
-
-            name.write(transactionEntries);
-            name.newLine();
-            name.close();
-
+                    name.write(transactionEntries);
+                    name.newLine();
+                    name.close();
+                }
+            }
+            
 
         } catch (IOException error) {
             System.out.println("An error has occurred, file not saved");
