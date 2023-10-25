@@ -1,13 +1,15 @@
 date|time|description|vendor|amount
-2023-10-24|14:27:10|Deposit|angel|800.0
-2023-10-24|14:55:16|Deposit|angel|800.0
-2023-10-24|14:57:03|Deposit|jo|600.0
-2022-10-24|14:57:33|Payment|ivan|-800.0
-2023-10-24|15:03:46|Deposit|jo|500.0
+2023-10-24|14:27:10|Deposit|Bojangles|800.0
+2023-10-24|14:55:16|Deposit|Angel|800.0
+2023-10-24|14:57:03|Deposit|Jo|600.0
+2022-10-24|14:57:33|Payment|Ivan|-800.0
+2023-10-24|15:03:46|Deposit|Stephanie|500.0
 2023-04-15|10:13:25|ergonomic keyboard|Amazon|-89.50
-2023-04-15|11:15:00|Invoice 1001 paid|Joe|1500.00
 2023-04-15|11:15:00|Invoice 1001 paid|Joe|1500.0
 2023-09-24|11:15:00|Invoice 1001 paid|Joe|1500.0
-2023-04-15|11:15:00|Invoice 1001 paid|Joe|1500.0
 2023-10-24|16:17:54|Deposit|Winnie the Poo|965.23
 2023-10-24|16:18:14|Payment|Winnie the Poo|-400.25
+2023-10-25|08:54:12|Deposit|Joshua|259.0
+2023-10-25|08:55:55|Payment|Burger King|-17000.23
+2023-10-25|08:57:03|Payment|GoodWill|-800.36
+2023-10-25|10:45:31|Deposit|Mr.Anderson|800.0

@@ -1,6 +1,5 @@
 package com.pluralsight;
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Scanner;
 import static com.pluralsight.LedgerScreen.*;
 
@@ -10,13 +9,14 @@ public class AccountingApplication {
         Scanner scan = new Scanner(System.in);
 
         while(true) {
-            System.out.println("Home Screen");
+            //HomeScreen - main
+            System.out.println("\nHome Screen");
             System.out.println("D) Add Deposit\n" +
                     "P) Make Payment(Debit)\n" +
                     "L) Ledger\n" +
                     "X) Exit");
 
-            System.out.println("What would you like to do?");
+            System.out.print("What would you like to do? ");
             String choice = scan.nextLine();
 
             if (choice.equalsIgnoreCase("D")) {
@@ -43,7 +43,8 @@ public class AccountingApplication {
                 saveTransaction("Payment", amount, vendor);
 
 
-                System.out.print("Payment Successful!");
+                System.out.print("Payment Successful!\n" +
+                        " ");
 
             } else if (choice.equalsIgnoreCase("L")) {
 

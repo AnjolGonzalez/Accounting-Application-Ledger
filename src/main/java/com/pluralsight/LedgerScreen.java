@@ -8,14 +8,14 @@ import java.util.Scanner;
 
 public class LedgerScreen {
     public static String transactionFile = "src/main/resources/transactions.csv";
-    private static DateTimeFormatter time =DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public static ArrayList<Ledger> ledgerArrayList = new ArrayList<>();
 
     public static void ledgerScreen (Scanner scan) throws IOException {
+        //This is to make sure if they put the wrong thing my code won't break
         readFile();
         while (true){
-            System.out.println("Ledger options: ");
+            System.out.println("\nLedger Screen:");
             System.out.println("A) All");
             System.out.println("D) Deposits");
             System.out.println("P) Payments");
@@ -23,7 +23,7 @@ public class LedgerScreen {
             System.out.println("O) Back");
             System.out.println("H) Home");
 
-            System.out.println("What would you like to do?: ");
+            System.out.print("What would you like to do?: ");
             String choice = scan.nextLine();
 
             if (choice.equalsIgnoreCase("A")) {
@@ -53,7 +53,7 @@ public class LedgerScreen {
             }else {
                 System.out.println("ERROR! ERROR!\n" +
                         "invalid input\n" +
-                        "Please try again: ");
+                        "Please try again:\n ");
             }
         }
     }
@@ -64,7 +64,7 @@ public class LedgerScreen {
             System.out.println("No entries found.");
 
         }else {
-            System.out.println("Entries");
+            System.out.println("\nEntries");
             for (Ledger key : ledgerArrayList) {
                 System.out.printf("Date: %s | Time: %s | Description: %s | Vendor: %s | Amount $%.2f\n",
                         key.getDate(), key.getTime(), key.getDescription(), key.getVendor(), key.getAmount());
@@ -75,7 +75,7 @@ public class LedgerScreen {
 
     private static void reportScreen(Scanner scan) {
         while (true) {
-            System.out.println("Report Screen");
+            System.out.println("\nReport Screen: ");
             System.out.println("1) Month To Date");
             System.out.println("2) Previous Month");
             System.out.println("3) Year To Date");
@@ -135,6 +135,7 @@ public class LedgerScreen {
     }
     //report
     private static void displayReport (ArrayList<Ledger> ledger, LocalDate sDate, LocalDate eDate) {
+        //This displays report screen read from the array
 
         if (ledger.isEmpty()) {
 
@@ -142,7 +143,7 @@ public class LedgerScreen {
 
         }else {
 
-            System.out.println("Entry reports");
+            System.out.println("\nEntry reports: ");
 
             for (Ledger key : ledgerArrayList) {
 
@@ -158,6 +159,7 @@ public class LedgerScreen {
     }
 
     private static void displayFilteredLedger (boolean displayDeposits) {
+        //displays filtered ledger if not empty
 
         if (ledgerArrayList.isEmpty()) {
 
@@ -165,7 +167,7 @@ public class LedgerScreen {
 
         }else {
 
-            System.out.println("Filtered Entries");
+            System.out.println("\nEntries: ");
 
             for (Ledger key : ledgerArrayList) {
 
@@ -184,7 +186,7 @@ public class LedgerScreen {
 
         }else {
 
-            System.out.println("Filtered Entries for Vendor " + vendor);
+            System.out.println("\nEntries for Vendor " + vendor);
 
             for (Ledger key : ledgerArrayList) {
 
@@ -222,7 +224,7 @@ public class LedgerScreen {
     }
     public static void readFile() throws IOException {
         String input;
-        LocalDate date = LocalDate.now();
+        LocalDate date = LocalDate.now();//currently immutable
         LocalTime timeCSV = LocalTime.now();
         String description;
         String vendor;
@@ -251,5 +253,4 @@ public class LedgerScreen {
 
         }
     }
-
 }
