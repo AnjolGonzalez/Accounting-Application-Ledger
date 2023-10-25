@@ -1,12 +1,13 @@
 # Accounting-Application-Ledger
-Created methods for each screen
 
-Made entries save onto transactions.csv file
-![image](https://github.com/AnjolGonzalez/Accounting-Application-Ledger/assets/146877064/af0287a4-da62-48f4-857c-37c20adb9910)
+Home Screen
 
-fixing output for number 2 reports screen
-![image](https://github.com/AnjolGonzalez/Accounting-Application-Ledger/assets/146877064/d8bdbc85-5d85-4431-8aa4-97f5543c7fbb)
+![image](https://github.com/AnjolGonzalez/Accounting-Application-Ledger/assets/146877064/40b9199f-a4c9-4620-8f0d-b3fc4bdeca2b)
 
-fixed dates
+Ledger Screen
 
-![image](https://github.com/AnjolGonzalez/Accounting-Application-Ledger/assets/146877064/0ad8ed13-37c4-4a38-82ad-03c0826a1ccd)
+![image](https://github.com/AnjolGonzalez/Accounting-Application-Ledger/assets/146877064/0e794a4c-ae1d-4052-96f0-0fc32588387a)
+
+Reports Screen
+
+![image](https://github.com/AnjolGonzalez/Accounting-Application-Ledger/assets/146877064/25b64d17-e350-4bcd-9194-966b991e3b5c)
