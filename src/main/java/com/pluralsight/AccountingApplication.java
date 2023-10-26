@@ -51,10 +51,13 @@ public class AccountingApplication {
                 ledgerScreen(scan);
 
             }else if (choice.equalsIgnoreCase("X")) {
+
                 break;
+
             }else {
                 System.out.print("ERROR! ERROR!\n" +
                         "Please try again: ");
+
             }
         }
     }

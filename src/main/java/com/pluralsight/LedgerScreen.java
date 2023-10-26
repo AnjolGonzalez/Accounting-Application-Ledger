@@ -61,6 +61,7 @@ public class LedgerScreen {
 
     public static ArrayList<Ledger> ledgerEntryList(ArrayList<Ledger>ledgerArrayList) {
         ledgerArrayList.sort((key1, key2) -> {
+            //key 1 represents the date and key 2 represents the time
 
             LocalDateTime day1 = LocalDateTime.of(key1.getDate(), key1.getTime());
             LocalDateTime day2 = LocalDateTime.of(key2.getDate(), key2.getTime());
@@ -161,6 +162,7 @@ public class LedgerScreen {
 
                 LocalDate date = key.getDate();
 
+                //&& evaluates expression to return boolean
                 if (date.isBefore(eDate) && date.isAfter(sDate)) {
                     //This checks the date if it's before the specified date
                     //The second one checks the date if it's after the specified one
