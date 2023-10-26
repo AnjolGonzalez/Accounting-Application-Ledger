@@ -1,6 +1,7 @@
 package com.pluralsight;
 import java.io.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
@@ -28,19 +29,19 @@ public class LedgerScreen {
 
             if (choice.equalsIgnoreCase("A")) {
 
-                displayLedger();
+                displayLedger(ledgerEntryList(ledgerArrayList));
 
             } else if (choice.equalsIgnoreCase("D")) {
 
-                displayFilteredLedger(true);
+                displayFilteredLedger(true, ledgerEntryList(ledgerArrayList));
 
             } else if (choice.equalsIgnoreCase("P")) {
 
-                displayFilteredLedger(false);
+                displayFilteredLedger(false, ledgerEntryList(ledgerArrayList));
 
             } else if (choice.equalsIgnoreCase("R")) {
 
-                reportScreen(scan);
+                reportScreen(scan, ledgerEntryList(ledgerArrayList));
 
             } else if (choice.equalsIgnoreCase("O")) {
 
@@ -58,14 +59,25 @@ public class LedgerScreen {
         }
     }
 
-    private static void displayLedger() {
-        if (ledgerArrayList.isEmpty()) {
+    public static ArrayList<Ledger> ledgerEntryList(ArrayList<Ledger>ledgerArrayList) {
+        ledgerArrayList.sort((key1, key2) -> {
+
+            LocalDateTime day1 = LocalDateTime.of(key1.getDate(), key1.getTime());
+            LocalDateTime day2 = LocalDateTime.of(key2.getDate(), key2.getTime());
+            return day2.compareTo(day1);
+
+        });
+        return ledgerArrayList;
+    }
+
+    private static void displayLedger(ArrayList<Ledger> ledgerArrayList) {
+        if (LedgerScreen.ledgerArrayList.isEmpty()) {
 
             System.out.println("No entries found.");
 
         }else {
             System.out.println("\nEntries");
-            for (Ledger key : ledgerArrayList) {
+            for (Ledger key : LedgerScreen.ledgerArrayList) {
                 System.out.printf("Date: %s | Time: %s | Description: %s | Vendor: %s | Amount $%.2f\n",
                         key.getDate(), key.getTime(), key.getDescription(), key.getVendor(), key.getAmount());
 
@@ -73,7 +85,7 @@ public class LedgerScreen {
         }
     }
 
-    private static void reportScreen(Scanner scan) {
+    private static void reportScreen(Scanner scan, ArrayList<Ledger> ledgerArrayList) {
         while (true) {
             System.out.println("\nReport Screen: ");
             System.out.println("1) Month To Date");
@@ -93,31 +105,31 @@ public class LedgerScreen {
 
                 LocalDate sDate = LocalDate.now().minusMonths(1);
                 LocalDate eDate = LocalDate.now().plusMonths(1);
-                displayReport (ledgerArrayList, sDate, eDate);
+                displayReport (LedgerScreen.ledgerArrayList, sDate, eDate);
 
             }else if (choice.equalsIgnoreCase("2")) {
 
                 LocalDate sDate = LocalDate.now().minusMonths(1).withDayOfMonth(1);
                 LocalDate eDate = LocalDate.now().withDayOfMonth(1).minusDays(1);
-                displayReport (ledgerArrayList,sDate, eDate);
+                displayReport (LedgerScreen.ledgerArrayList,sDate, eDate);
 
             } else if (choice.equalsIgnoreCase("3")) {
 
                 LocalDate sDate = LocalDate.now().withDayOfYear(1);
                 LocalDate eDate = LocalDate.now();
-                displayReport(ledgerArrayList, sDate, eDate);
+                displayReport(LedgerScreen.ledgerArrayList, sDate, eDate);
 
             } else if (choice.equalsIgnoreCase("4")) {
 
                 LocalDate sDate =LocalDate.now().minusYears(1).withDayOfYear(1);
                 LocalDate eDate =LocalDate.now().minusYears(1).withDayOfYear(LocalDate.now().minusYears(1).lengthOfYear());
-                displayReport(ledgerArrayList, sDate, eDate);
+                displayReport(LedgerScreen.ledgerArrayList, sDate, eDate);
 
             } else if (choice.equalsIgnoreCase("5")) {
 
                 System.out.println("Enter Vendor name: ");
                 String vendor = scan.nextLine();
-                displayFilteredLedgerByVendor(ledgerArrayList, vendor);
+                displayFilteredLedgerByVendor(LedgerScreen.ledgerArrayList, vendor);
 
             } else if (choice.equalsIgnoreCase("0")) {
                 //goes back one
@@ -158,10 +170,10 @@ public class LedgerScreen {
         }
     }
 
-    private static void displayFilteredLedger (boolean displayDeposits) {
+    private static void displayFilteredLedger (boolean displayDeposits, ArrayList<Ledger> ledgerArrayList) {
         //displays filtered ledger if not empty
 
-        if (ledgerArrayList.isEmpty()) {
+        if (LedgerScreen.ledgerArrayList.isEmpty()) {
 
             System.out.println("No entries found");
 
@@ -169,7 +181,7 @@ public class LedgerScreen {
 
             System.out.println("\nEntries: ");
 
-            for (Ledger key : ledgerArrayList) {
+            for (Ledger key : LedgerScreen.ledgerArrayList) {
 
                 double amount = key.getAmount();
                 if ((displayDeposits && amount > 0) || (!displayDeposits && amount < 0)) {
@@ -190,7 +202,7 @@ public class LedgerScreen {
 
             for (Ledger key : ledgerArrayList) {
 
-                if (key.getVendor().contains(vendor)) {
+                if (key.getVendor().equalsIgnoreCase(vendor)) {
                     System.out.printf("Date: %s | Time: %s | Description: %s | Vendor: %s | Amount $%.2f\n",
                             key.getDate(), key.getTime(), key.getDescription(), key.getVendor(), key.getAmount());
                 }
