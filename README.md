@@ -11,3 +11,5 @@ Ledger Screen
 Reports Screen
 
 ![image](https://github.com/AnjolGonzalez/Accounting-Application-Ledger/assets/146877064/25b64d17-e350-4bcd-9194-966b991e3b5c)
+
+This application has different screens with different functions that work together and get saved in the same destination. All prompts to the user are saved in a file to view and if asked by the user the entries will be displayed for them. 
