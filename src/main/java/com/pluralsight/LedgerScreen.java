@@ -13,7 +13,7 @@ public class LedgerScreen {
     public static ArrayList<Ledger> ledgerArrayList = new ArrayList<>();
 
     public static void ledgerScreen (Scanner scan) throws IOException {
-        //This is to make sure if they put the wrong thing my code won't break
+
         readFile();
         while (true){
             System.out.println("\nLedger Screen:");
@@ -61,7 +61,6 @@ public class LedgerScreen {
 
     public static ArrayList<Ledger> ledgerEntryList(ArrayList<Ledger>ledgerArrayList) {
         ledgerArrayList.sort((key1, key2) -> {
-            //key 1 represents the date and key 2 represents the time
 
             LocalDateTime day1 = LocalDateTime.of(key1.getDate(), key1.getTime());
             LocalDateTime day2 = LocalDateTime.of(key2.getDate(), key2.getTime());
@@ -101,8 +100,6 @@ public class LedgerScreen {
             String choice = scan.nextLine();
 
             if (choice.equalsIgnoreCase("1")) {
-                /*All these methods are doing is setting up the calculations on reading the data in file and outputting
-                the correct way*/
 
                 LocalDate sDate = LocalDate.now().minusMonths(1);
                 LocalDate eDate = LocalDate.now().plusMonths(1);
@@ -148,7 +145,6 @@ public class LedgerScreen {
     }
     //report
     private static void displayReport (ArrayList<Ledger> ledger, LocalDate sDate, LocalDate eDate) {
-        //This displays report screen read from the array
 
         if (ledger.isEmpty()) {
 
@@ -162,10 +158,8 @@ public class LedgerScreen {
 
                 LocalDate date = key.getDate();
 
-                //&& evaluates expression to return boolean
                 if (date.isBefore(eDate) && date.isAfter(sDate)) {
-                    //This checks the date if it's before the specified date
-                    //The second one checks the date if it's after the specified one
+
                     System.out.printf("Date: %s | Time: %s | Description: %s | Vendor: %s | Amount $%.2f\n",
                             key.getDate(), key.getTime(), key.getDescription(), key.getVendor(), key.getAmount());                }
             }
@@ -173,7 +167,6 @@ public class LedgerScreen {
     }
 
     private static void displayFilteredLedger (boolean displayDeposits, ArrayList<Ledger> ledgerArrayList) {
-        //displays filtered ledger if not empty
 
         if (LedgerScreen.ledgerArrayList.isEmpty()) {
 
@@ -220,10 +213,11 @@ public class LedgerScreen {
             timeCSV = LocalTime.parse(dTime.format(timeCSV));
 
             FileWriter fileWriter = new FileWriter(transactionFile, true);
-            BufferedWriter name = new BufferedWriter(fileWriter);
+            BufferedWriter name = new BufferedWriter(fileWriter); //appends instead of overwriting
 
             ledgerArrayList.add(new Ledger(date, timeCSV, description, vendor, amount));
 
+                                                    //Concatenating
                     String transactionEntries = date +"|" + timeCSV + "|" + description + "|" + vendor + "|" + amount;
 
                     name.write(transactionEntries);
@@ -233,12 +227,12 @@ public class LedgerScreen {
 
         } catch (IOException error) {
             System.out.println("An error has occurred, file not saved");
-            error.printStackTrace();
+            error.printStackTrace(); //handle errors that occur
         }
     }
     public static void readFile() throws IOException {
         String input;
-        LocalDate date = LocalDate.now();//currently immutable
+        LocalDate date;
         LocalTime timeCSV = LocalTime.now();
         String description;
         String vendor;

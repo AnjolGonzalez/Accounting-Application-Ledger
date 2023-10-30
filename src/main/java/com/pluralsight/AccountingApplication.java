@@ -9,7 +9,7 @@ public class AccountingApplication {
         Scanner scan = new Scanner(System.in);
 
         while(true) {
-            //HomeScreen - main
+
             System.out.println("\nHome Screen");
             System.out.println("D) Add Deposit\n" +
                     "P) Make Payment(Debit)\n" +
